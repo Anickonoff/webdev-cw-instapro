@@ -67,3 +67,21 @@ export function uploadImage({ file }) {
     return response.json();
   });
 }
+
+export function addPost({ token, description, imageUrl }) {
+  return fetch(postsHost, {
+    method: "POST",
+    body: JSON.stringify({
+      description,
+      imageUrl,
+    }),
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    if (response.status === 400) {
+      throw new Error(response.json.message);
+    }
+    return response.json();
+  });
+}
