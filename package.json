@@ -1,0 +1,28 @@
+{
+  "name": "webdev-cw-instapro",
+  "version": "1.0.0",
+  "description": "MVP социальной сети для обмена фотографиями",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anickonoff/webdev-cw-instapro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anickonoff/webdev-cw-instapro/issues"
+  },
+  "homepage": "https://github.com/Anickonoff/webdev-cw-instapro#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
+    "prettier": "^3.6.2"
+  }
+}
