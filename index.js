@@ -20,7 +20,7 @@ export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -68,9 +68,9 @@ export const goToPage = (newPage, data) => {
 
     if (newPage === USER_POSTS_PAGE) {
       // @@TODO: реализовать получение постов юзера из API
-      console.log("Открываю страницу пользователя: ", data.userId);
       page = LOADING_PAGE;
       renderApp();
+
       return getUserPosts({ token: getToken(), id: data.userId })
         .then((newPosts) => {
           page = USER_POSTS_PAGE;

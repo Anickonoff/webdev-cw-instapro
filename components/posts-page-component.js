@@ -1,6 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
+import { posts, goToPage, getToken } from "../index.js";
+import { togglelikePost } from "../api.js";
 
 export function renderPostsPageComponent({ appEl }) {
   // @TODO: реализовать рендер постов из api
@@ -15,7 +16,7 @@ export function renderPostsPageComponent({ appEl }) {
       (post) => `
     <li class="post">
       <div class="post-header" data-user-id="${post.user.id}">
-        <img src="${post.user.imgUrl}" class="post-header__user-image">
+        <img src="${post.user.imageUrl}" class="post-header__user-image">
         <p class="post-header__user-name">${post.user.name}</p>
       </div>
       <div class="post-image-container">
@@ -59,6 +60,31 @@ export function renderPostsPageComponent({ appEl }) {
       goToPage(USER_POSTS_PAGE, {
         userId: userEl.dataset.userId,
       });
+    });
+  }
+
+  for (let likeButtonEl of document.querySelectorAll(".like-button")) {
+    likeButtonEl.addEventListener("click", () => {
+      const postId = likeButtonEl.dataset.postId;
+      const post = posts.find((post) => post.id === postId);
+      togglelikePost({
+        token: getToken(),
+        postId: postId,
+        isLiked: post.isLiked,
+      })
+        .then((response) => {
+          posts.map((post) => {
+            if (post.id === postId) {
+              post.isLiked = response.post.isLiked;
+              post.likes = response.post.likes;
+            }
+            return post;
+          });
+          renderPostsPageComponent({ appEl });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
   }
 }
