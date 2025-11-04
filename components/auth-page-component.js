@@ -1,4 +1,5 @@
 import { loginUser, registerUser } from "../api.js";
+import { tagFilter } from "../helpers.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
@@ -106,12 +107,12 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         const password = document.getElementById("password-input").value;
 
         if (!login) {
-          alert("Введите логин");
+          setError("Введите логин");
           return;
         }
 
         if (!password) {
-          alert("Введите пароль");
+          setError("Введите пароль");
           return;
         }
 
@@ -126,26 +127,26 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       } else {
         // Обработка регистрации
         const login = document.getElementById("login-input").value;
-        const name = document.getElementById("name-input").value;
+        const name = tagFilter(document.getElementById("name-input").value);
         const password = document.getElementById("password-input").value;
 
         if (!name) {
-          alert("Введите имя");
+          setError("Введите имя");
           return;
         }
 
         if (!login) {
-          alert("Введите логин");
+          setError("Введите логин");
           return;
         }
 
         if (!password) {
-          alert("Введите пароль");
+          setError("Введите пароль");
           return;
         }
 
         if (!imageUrl) {
-          alert("Не выбрана фотография");
+          setError("Не выбрана фотография");
           return;
         }
 

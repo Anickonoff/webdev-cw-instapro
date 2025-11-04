@@ -13,3 +13,7 @@ export function getUserFromLocalStorage(user) {
 export function removeUserFromLocalStorage(user) {
   window.localStorage.removeItem("user");
 }
+
+export const tagFilter = (string) => {
+  return string.replaceAll("<", "&lt").replaceAll(">", "&gt");
+};

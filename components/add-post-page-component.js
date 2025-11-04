@@ -1,3 +1,4 @@
+import { tagFilter } from "../helpers.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
@@ -56,7 +57,7 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
       }
 
       onAddPostClick({
-        description: description,
+        description: tagFilter(description),
         imageUrl: imageUrl,
       });
     });
