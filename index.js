@@ -25,6 +25,10 @@ export const getToken = () => {
   return token;
 };
 
+export const getUserId = () => {
+  return user ? user.id : undefined;
+};
+
 export const logout = () => {
   user = null;
   removeUserFromLocalStorage();

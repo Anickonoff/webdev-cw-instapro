@@ -1,9 +1,10 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken } from "../index.js";
+import { posts, goToPage, getToken, getUserId } from "../index.js";
 import { deletePost, togglelikePost } from "../api.js";
 import { formatDistanceToNow } from "../node_modules/date-fns/index.js";
 import { ru } from "../node_modules/date-fns/locale/ru.js";
+import { tagFilter } from "../helpers.js";
 
 export function renderPostsPageComponent({ appEl }) {
   // @TODO: реализовать рендер постов из api
@@ -39,7 +40,7 @@ export function renderPostsPageComponent({ appEl }) {
       </div>
       <p class="post-text">
         <span class="user-name">${post.user.name}</span>
-        ${post.description}
+        ${tagFilter(post.description)}
       </p>
       <p class="post-date">
         ${formatDistanceToNow(post.createdAt, { locale: ru, addSuffix: true })}
@@ -99,21 +100,27 @@ export function renderPostsPageComponent({ appEl }) {
     trashButtonEl.addEventListener("click", () => {
       const postId = trashButtonEl.dataset.postId;
       const post = posts.find((post) => post.id === postId);
-      if (
-        confirm(`Вы действительно хотите удалить пост "${post.description}"?`)
-      ) {
-        deletePost({ token: getToken(), postId })
-          .then(() => {
-            posts.splice(
-              posts.findIndex((post) => post.id === postId),
-              1,
-            );
-            renderPostsPageComponent({ appEl });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        console.log("Удаляю пост...", postId);
+      if (post.user.id === getUserId()) {
+        if (
+          confirm(`Вы действительно хотите удалить пост "${post.description}"?`)
+        ) {
+          deletePost({ token: getToken(), postId })
+            .then(() => {
+              posts.splice(
+                posts.findIndex((post) => post.id === postId),
+                1,
+              );
+              renderPostsPageComponent({ appEl });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          console.log("Удаляю пост...", postId);
+        }
+      } else {
+        alert(
+          "Вы не можете удалить чужой пост. Он может удалить только его автор.",
+        );
       }
     });
   }
