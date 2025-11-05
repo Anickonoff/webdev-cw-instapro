@@ -30,7 +30,7 @@ export function renderPostsPageComponent({ appEl }) {
             <img src="${post.isLiked ? "./assets/images/like-active.svg" : "./assets/images/like-not-active.svg"}">
           </button>
           <p class="post-likes-text">
-            Нравится: <strong>${post.likes.length > 0 ? post.likes[0].name : "0"}</strong> ${post.likes.length > 1 ? `и <strong>ещё ${post.likes.length - 1}` : ""}</strong>
+            Нравится: <strong>${post.likes.length > 0 ? post.likes[0].name : "0"}</strong> ${post.likes.length > 1 ? `и <strong data-post-id="${post.id}" class="post-likes-list">ещё ${post.likes.length - 1}` : ""}</strong>
           </p>
         </div>
           <button data-post-id="${post.id}" class="trash-button">
@@ -115,6 +115,17 @@ export function renderPostsPageComponent({ appEl }) {
           });
         console.log("Удаляю пост...", postId);
       }
+    });
+  }
+  for (let likesListEl of document.querySelectorAll(".post-likes-list")) {
+    likesListEl.addEventListener("click", () => {
+      const postId = likesListEl.dataset.postId;
+      const post = posts.find((post) => post.id === postId);
+      const likesList = post.likes
+        .slice(1)
+        .map((like) => like.name)
+        .join(", ");
+      likesListEl.innerHTML = `ещё ${likesList}`;
     });
   }
 }

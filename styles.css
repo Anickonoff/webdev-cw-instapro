@@ -85,6 +85,10 @@
   align-items: center;
 }
 
+.post-likes-list {
+  cursor: pointer;
+}
+
 .post-buttons {
   display: flex;
   flex-direction: row;
