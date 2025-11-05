@@ -1,7 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken } from "../index.js";
-import { togglelikePost } from "../api.js";
+import { deletePost, togglelikePost } from "../api.js";
 import { formatDistanceToNow } from "../node_modules/date-fns/index.js";
 import { ru } from "../node_modules/date-fns/locale/ru.js";
 
@@ -24,13 +24,18 @@ export function renderPostsPageComponent({ appEl }) {
       <div class="post-image-container">
         <img class="post-image" src="${post.imageUrl}">
       </div>
-      <div class="post-likes">
-        <button data-post-id="${post.id}" class="like-button">
-          <img src="${post.isLiked ? "./assets/images/like-active.svg" : "./assets/images/like-not-active.svg"}">
-        </button>
-        <p class="post-likes-text">
-          Нравится: <strong>${post.likes.length > 0 ? post.likes[0].name : "0"}</strong> ${post.likes.length > 1 ? `и <strong>ещё ${post.likes.length - 1}` : ""}</strong>
-        </p>
+      <div class="post-buttons">
+        <div class="post-likes">
+          <button data-post-id="${post.id}" class="like-button">
+            <img src="${post.isLiked ? "./assets/images/like-active.svg" : "./assets/images/like-not-active.svg"}">
+          </button>
+          <p class="post-likes-text">
+            Нравится: <strong>${post.likes.length > 0 ? post.likes[0].name : "0"}</strong> ${post.likes.length > 1 ? `и <strong>ещё ${post.likes.length - 1}` : ""}</strong>
+          </p>
+        </div>
+          <button data-post-id="${post.id}" class="trash-button">
+            <img src="./assets/images/trashbin.svg">
+          </button>
       </div>
       <p class="post-text">
         <span class="user-name">${post.user.name}</span>
@@ -87,6 +92,29 @@ export function renderPostsPageComponent({ appEl }) {
         .catch((error) => {
           console.log(error);
         });
+    });
+  }
+
+  for (let trashButtonEl of document.querySelectorAll(".trash-button")) {
+    trashButtonEl.addEventListener("click", () => {
+      const postId = trashButtonEl.dataset.postId;
+      const post = posts.find((post) => post.id === postId);
+      if (
+        confirm(`Вы действительно хотите удалить пост "${post.description}"?`)
+      ) {
+        deletePost({ token: getToken(), postId })
+          .then(() => {
+            posts.splice(
+              posts.findIndex((post) => post.id === postId),
+              1,
+            );
+            renderPostsPageComponent({ appEl });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log("Удаляю пост...", postId);
+      }
     });
   }
 }

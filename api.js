@@ -119,3 +119,18 @@ export function togglelikePost({ token, postId, isLiked }) {
     return response.json();
   });
 }
+
+export function deletePost({ token, postId }) {
+  return fetch(postsHost + `/${postId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    if (response.status === 200) {
+      return response.json();
+    } else {
+      throw new Error(response.json.message);
+    }
+  });
+}
